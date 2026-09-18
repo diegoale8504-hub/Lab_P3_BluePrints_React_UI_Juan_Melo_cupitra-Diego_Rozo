@@ -1,3 +1,5 @@
+### Hecho por: Juan Camilo Melo Cupitra y Diego Alejandro Rozo Gaviria
+
 # Lab – React Client for Blueprints (Redux + Axios + JWT)
 
 > Basado en el cliente HTML/JS del repo de referencia, este laboratorio moderniza el _frontend_ con **React + Vite**, **Redux Toolkit**, **Axios** (con interceptores y JWT), **React Router** y pruebas con **Vitest + Testing Library**.
