@@ -14,7 +14,12 @@ api.interceptors.request.use((config) => {
 })
 
 api.interceptors.response.use(
-  (res) => res,
+  (res) => {
+    if (res.data && res.data.data !== undefined && res.data.code !== undefined) {
+      res.data = res.data.data
+    }
+    return res
+  },
   (err) => {
     if (err.response && err.response.status === 401) {
       localStorage.removeItem('token')
@@ -41,6 +46,18 @@ const apiClient = {
   create: async (blueprint) => {
     const { data } = await api.post('/blueprints', blueprint)
     return data
+  },
+  update: async (author, name, point) => {
+    const { data } = await api.put(
+      `/blueprints/${encodeURIComponent(author)}/${encodeURIComponent(name)}/points`,
+      point,
+    )
+    return data
+  },
+  deleteBlueprint: async (author, name) => {
+    await api.delete(
+      `/blueprints/${encodeURIComponent(author)}/${encodeURIComponent(name)}`,
+    )
   },
   // Métodos axios delegados para compatibilidad
   get: api.get.bind(api),

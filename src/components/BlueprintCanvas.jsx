@@ -5,6 +5,7 @@ export default function BlueprintCanvas({
   width = 520,
   height = 360,
   id = 'blueprint-canvas',
+  onAddPoint,
 }) {
   const ref = useRef(null)
 
@@ -49,18 +50,30 @@ export default function BlueprintCanvas({
     }
   }, [points])
 
+  const handleClick = (e) => {
+    if (!onAddPoint || !ref.current) return
+    const rect = ref.current.getBoundingClientRect()
+    const scaleX = ref.current.width / rect.width
+    const scaleY = ref.current.height / rect.height
+    const x = Math.round((e.clientX - rect.left) * scaleX)
+    const y = Math.round((e.clientY - rect.top) * scaleY)
+    onAddPoint({ x, y })
+  }
+
   return (
     <canvas
       ref={ref}
       id={id}
       width={width}
       height={height}
+      onClick={handleClick}
       style={{
         background: '#0b1220',
         border: '1px solid #334155',
         borderRadius: 12,
         width: '100%',
         maxWidth: width,
+        cursor: onAddPoint ? 'crosshair' : 'default',
       }}
     />
   )

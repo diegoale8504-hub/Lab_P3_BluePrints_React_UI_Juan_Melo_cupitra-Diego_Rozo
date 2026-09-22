@@ -5,11 +5,17 @@ import { configureStore, createSlice } from '@reduxjs/toolkit'
 import BlueprintsPage from '../src/pages/BlueprintsPage.jsx'
 
 // Mock de thunks del slice para no requerir backend
-vi.mock('../src/features/blueprints/blueprintsSlice.js', () => ({
-  fetchAuthors: () => ({ type: 'blueprints/fetchAuthors' }),
-  fetchByAuthor: (author) => ({ type: 'blueprints/fetchByAuthor', payload: author }),
-  fetchBlueprint: (payload) => ({ type: 'blueprints/fetchBlueprint', payload }),
-}))
+vi.mock('../src/features/blueprints/blueprintsSlice.js', async (importOriginal) => {
+  const actual = await importOriginal()
+  return {
+    ...actual,
+    fetchAuthors: () => ({ type: 'blueprints/fetchAuthors' }),
+    fetchByAuthor: (author) => ({ type: 'blueprints/fetchByAuthor', payload: author }),
+    fetchBlueprint: (payload) => ({ type: 'blueprints/fetchBlueprint', payload }),
+    updateBlueprint: (payload) => ({ type: 'blueprints/updateBlueprint', payload }),
+    selectTop5Blueprints: () => []
+  }
+})
 
 function makeStore(preloaded) {
   const slice = createSlice({

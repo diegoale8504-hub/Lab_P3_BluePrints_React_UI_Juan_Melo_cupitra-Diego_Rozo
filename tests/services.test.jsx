@@ -1,5 +1,10 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import apimock from '../src/services/apimock.js'
+
+vi.mock('../src/services/apiClient.js', () => ({
+  default: apimock
+}))
+
 import blueprintsService from '../src/services/blueprintsService.js'
 
 describe('Servicios - apimock y blueprintsService (Requerimiento 4)', () => {

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, createSelector } from '@reduxjs/toolkit'
 import blueprintsService from '../../services/blueprintsService.js'
 
 export const fetchAuthors = createAsyncThunk('blueprints/fetchAuthors', async () => {
@@ -25,6 +25,16 @@ export const createBlueprint = createAsyncThunk('blueprints/createBlueprint', as
   return data
 })
 
+export const updateBlueprint = createAsyncThunk('blueprints/updateBlueprint', async ({ author, name, point }) => {
+  const data = await blueprintsService.update(author, name, point)
+  return data
+})
+
+export const deleteBlueprint = createAsyncThunk('blueprints/deleteBlueprint', async ({ author, name }) => {
+  await blueprintsService.deleteBlueprint(author, name)
+  return { author, name }
+})
+
 const slice = createSlice({
   name: 'blueprints',
   initialState: {
@@ -38,6 +48,11 @@ const slice = createSlice({
     clearCurrentBlueprint: (state) => {
       state.current = null
     },
+    addPointToCurrent: (state, action) => {
+      if (state.current) {
+        state.current.points.push(action.payload)
+      }
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -81,8 +96,44 @@ const slice = createSlice({
         const bp = a.payload
         if (s.byAuthor[bp.author]) s.byAuthor[bp.author].push(bp)
       })
+      .addCase(updateBlueprint.fulfilled, (s, a) => {
+        const bp = a.payload
+        if (s.byAuthor[bp.author]) {
+          const idx = s.byAuthor[bp.author].findIndex(b => b.name === bp.name)
+          if (idx !== -1) s.byAuthor[bp.author][idx] = bp
+        }
+        if (s.current && s.current.name === bp.name && s.current.author === bp.author) {
+          s.current = bp
+        }
+      })
+      .addCase(deleteBlueprint.fulfilled, (s, a) => {
+        const { author, name } = a.payload
+        if (s.byAuthor[author]) {
+          s.byAuthor[author] = s.byAuthor[author].filter(b => b.name !== name)
+        }
+        if (s.current && s.current.name === name && s.current.author === author) {
+          s.current = null
+        }
+      })
   },
 })
 
-export const { clearCurrentBlueprint } = slice.actions
+export const selectTop5Blueprints = createSelector(
+  [(state) => state.blueprints.byAuthor],
+  (byAuthor) => {
+    const allBps = []
+    Object.values(byAuthor).forEach((bps) => {
+      if (Array.isArray(bps)) {
+        allBps.push(...bps)
+      } else if (bps && typeof bps === 'object') {
+        allBps.push(...Object.values(bps))
+      }
+    })
+    return allBps
+      .sort((a, b) => (b.points?.length || 0) - (a.points?.length || 0))
+      .slice(0, 5)
+  }
+)
+
+export const { clearCurrentBlueprint, addPointToCurrent } = slice.actions
 export default slice.reducer

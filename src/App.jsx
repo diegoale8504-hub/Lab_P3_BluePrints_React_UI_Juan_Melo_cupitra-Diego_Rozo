@@ -3,6 +3,8 @@ import BlueprintsPage from './pages/BlueprintsPage.jsx'
 import BlueprintDetailPage from './pages/BlueprintDetailPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import NotFound from './pages/NotFound.jsx'
+import PrivateRoute from './components/PrivateRoute.jsx'
+import CreateBlueprintPage from './pages/CreateBlueprintPage.jsx'
 
 export default function App() {
   return (
@@ -13,12 +15,16 @@ export default function App() {
           <NavLink to="/" end>
             Blueprints
           </NavLink>
+          <NavLink to="/create">Crear</NavLink>
           <NavLink to="/login">Login</NavLink>
         </nav>
       </header>
       <Routes>
         <Route path="/" element={<BlueprintsPage />} />
         <Route path="/blueprints/:author/:name" element={<BlueprintDetailPage />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/create" element={<CreateBlueprintPage />} />
+        </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -80,6 +80,21 @@ const apimock = {
     mockBlueprints.push(structuredClone(blueprint))
     return structuredClone(blueprint)
   },
+  update: async (author, name, points) => {
+    const idx = mockBlueprints.findIndex(
+      (b) => b.author.toLowerCase() === author.toLowerCase() && b.name.toLowerCase() === name.toLowerCase(),
+    )
+    if (idx === -1) throw new Error('Blueprint no encontrado')
+    mockBlueprints[idx].points = points
+    return structuredClone(mockBlueprints[idx])
+  },
+  deleteBlueprint: async (author, name) => {
+    const idx = mockBlueprints.findIndex(
+      (b) => b.author.toLowerCase() === author.toLowerCase() && b.name.toLowerCase() === name.toLowerCase(),
+    )
+    if (idx === -1) throw new Error('Blueprint no encontrado')
+    mockBlueprints.splice(idx, 1)
+  },
 }
 
 export default apimock

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import axios from 'axios'
 import api from '../services/apiClient.js'
 
 export default function LoginPage() {
@@ -10,8 +11,8 @@ export default function LoginPage() {
     e.preventDefault()
     setError(null)
     try {
-      const { data } = await api.post('/auth/login', { username, password })
-      localStorage.setItem('token', data.token)
+      const { data } = await axios.post('/auth/login', { username, password })
+      localStorage.setItem('token', data.access_token)
       alert('Login exitoso')
     } catch (e) {
       setError('Credenciales inválidas o servidor no disponible')
