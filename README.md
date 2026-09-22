@@ -28,18 +28,46 @@ Ver la especificación de glosario clave, consulta las [Definiciones del laborat
 
 Configura la URL base en `.env`.
 
-## Cómo arrancar
+## 🚀 Cómo ejecutar el proyecto (Para clonadores)
 
-```bash
-npm install
-cp .env.example .env
-# edita .env con la URL del backend
-npm run dev
-```
+Este proyecto puede ejecutarse de dos maneras diferentes: de forma nativa utilizando Node.js, o a través de contenedores utilizando Docker.
 
-Abre `http://localhost:5173`
+### Opción 1: Ejecución Local (Nativa)
+**Requisitos previos:** Node.js (v18 o superior) y npm.
 
-## Variables de entorno
+1. Instala las dependencias del proyecto:
+   ```bash
+   npm install
+   ```
+2. Crea tu archivo de variables de entorno basado en el ejemplo:
+   ```bash
+   cp .env.example .env
+   ```
+3. (Opcional) Abre el archivo `.env` y asegúrate de que la variable `VITE_API_BASE_URL` apunte a la ruta donde está corriendo tu backend de Java (por defecto es `http://localhost:8080/api`).
+4. Inicia el servidor de desarrollo de Vite:
+   ```bash
+   npm run dev
+   ```
+5. Abre en tu navegador la dirección: `http://localhost:5173`
+
+### Opción 2: Ejecución con Docker / Docker Compose
+**Requisitos previos:** Docker y Docker Compose instalados en tu máquina.
+
+1. (Opcional) En el archivo `docker-compose.yml`, verifica la sección `environment` del servicio `web` para asegurarte de que `VITE_API_BASE_URL` esté apuntando al contenedor de tu backend.
+2. Construye y levanta el contenedor con el siguiente comando:
+   ```bash
+   docker-compose up --build
+   ```
+3. Abre en tu navegador la dirección: `http://localhost:5173` (El puerto interno 4173 del contenedor está mapeado al 5173 de tu máquina local).
+4. Para detener la ejecución, simplemente presiona `Ctrl+C` en la terminal o ejecuta:
+   ```bash
+   docker-compose down
+   ```
+
+## 🔐 Autenticación
+Recuerda que para acceder a los planos debes haber iniciado tu backend de Java y utilizar credenciales válidas (ej. `student` / `student123`) para iniciar sesión en la pestaña de Login de esta aplicación.
+
+## ⚙️ Variables de entorno
 
 Crea un archivo `.env` en la raíz:
 
